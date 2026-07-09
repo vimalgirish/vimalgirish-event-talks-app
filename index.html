@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tech Event Schedule</title>
+    <style>
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+header {
+    background-color: #333;
+    color: #fff;
+    padding: 1rem 0;
+    text-align: center;
+}
+
+main {
+    padding: 20px;
+    max-width: 900px;
+    margin: 20px auto;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.search-section {
+    margin-bottom: 20px;
+}
+
+#categorySearch {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 1rem;
+}
+
+.schedule-item {
+    background-color: #f9f9f9;
+    border: 1px solid #eee;
+    margin-bottom: 15px;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+.schedule-item h2 {
+    color: #0056b3;
+    margin-top: 0;
+    margin-bottom: 5px;
+}
+
+.schedule-item .time {
+    font-weight: bold;
+    color: #555;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.schedule-item .speakers,
+.schedule-item .categories {
+    font-size: 0.9em;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.schedule-item .speaker-bio {
+    font-style: italic;
+    color: #777;
+    margin-left: 15px;
+    margin-bottom: 5px;
+}
+
+.schedule-item .description {
+    line-height: 1.6;
+}
+
+.break-item {
+    background-color: #e9e9e9;
+    border: 1px dashed #ccc;
+    margin-bottom: 15px;
+    padding: 15px;
+    border-radius: 5px;
+    text-align: center;
+    font-weight: bold;
+    color: #444;
+}
+
+footer {
+    text-align: center;
+    padding: 20px;
+    color: #fff;
+    background-color: #333;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Tech Event 2026</h1>
+        <p>A day of insightful talks and innovation.</p>
+    </header>
+
+    <main>
+        <section class="search-section">
+            <input type="text" id="categorySearch" placeholder="Search by category...">
+        </section>
+
+        <section class="schedule" id="schedule">
+            <!-- Schedule will be dynamically loaded here -->
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Tech Event. All rights reserved.</p>
+    </footer>
+
+    <script>
+        const talksData = [
+  {
+    "id": "talk1",
+    "title": "The Future of Web Development",
+    "speakers": [
+      {
+        "name": "Alice Johnson",
+        "bio": "Lead Frontend Engineer at Tech Solutions, specializing in modern web frameworks and performance optimization."
+      }
+    ],
+    "category": ["Web Development", "Frontend", "Future"],
+    "duration": 60,
+    "description": "An insightful look into emerging trends and technologies shaping the landscape of web development in the next decade."
+  },
+  {
+    "id": "talk2",
+    "title": "Mastering Microservices with Node.js",
+    "speakers": [
+      {
+        "name": "Bob Smith",
+        "bio": "Principal Backend Architect at Global Innovations, with extensive experience in scalable systems and distributed architectures."
+      },
+      {
+        "name": "Charlie Brown",
+        "bio": "Senior DevOps Engineer, focused on containerization and cloud-native deployments."
+      }
+    ],
+    "category": ["Backend", "Node.js", "Microservices", "Cloud"],
+    "duration": 60,
+    "description": "Explore advanced patterns and best practices for building robust and scalable microservices using Node.js."
+  },
+  {
+    "id": "talk3",
+    "title": "AI in Everyday Applications",
+    "speakers": [
+      {
+        "name": "Diana Miller",
+        "bio": "AI Research Scientist at Future Labs, working on practical applications of machine learning and natural language processing."
+      }
+    ],
+    "category": ["AI", "Machine Learning", "Applications"],
+    "duration": 60,
+    "description": "Discover how artificial intelligence is being integrated into common applications to enhance user experience and automate tasks."
+  },
+  {
+    "id": "talk4",
+    "title": "Effective State Management in React",
+    "speakers": [
+      {
+        "name": "Eve Davis",
+        "bio": "React instructor and consultant, passionate about clean code and efficient state management solutions."
+      }
+    ],
+    "category": ["Frontend", "React", "State Management"],
+    "duration": 60,
+    "description": "A deep dive into various state management patterns and libraries in React, helping you choose the right approach for your projects."
+  },
+  {
+    "id": "talk5",
+    "title": "Securing Your APIs",
+    "speakers": [
+      {
+        "name": "Frank White",
+        "bio": "Cybersecurity expert and author, with a focus on API security and secure coding practices."
+      }
+    ],
+    "category": ["Security", "API", "Backend"],
+    "duration": 60,
+    "description": "Learn essential strategies and tools to protect your APIs from common vulnerabilities and threats."
+  },
+  {
+    "id": "talk6",
+    "title": "Containerization with Docker and Kubernetes",
+    "speakers": [
+      {
+        "name": "Grace Lee",
+        "bio": "Cloud Native Advocate and Solutions Architect, helping teams adopt container technologies for scalable deployments."
+      }
+    ],
+    "category": ["DevOps", "Containers", "Kubernetes", "Cloud"],
+    "duration": 60,
+    "description": "Understand the fundamentals of Docker and Kubernetes and how to leverage them for efficient application deployment and scaling."
+  }
+];
+        document.addEventListener('DOMContentLoaded', () => {
+            const scheduleContainer = document.getElementById('schedule');
+            const categorySearchInput = document.getElementById('categorySearch');
+            let allTalks = talksData; // Use embedded talksData directly
+
+            // Function to format time
+            const formatTime = (date) => {
+                return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            };
+
+            // Function to calculate and render the schedule
+            const renderSchedule = (talksToRender) => {
+                scheduleContainer.innerHTML = ''; // Clear existing schedule
+
+                let currentTime = new Date();
+                currentTime.setHours(10, 0, 0, 0); // Event starts at 10:00 AM
+
+                const addTime = (date, minutes) => {
+                    return new Date(date.getTime() + minutes * 60000);
+                };
+
+                talksToRender.forEach((talk, index) => {
+                    const talkStartTime = formatTime(currentTime);
+                    let talkEndTime = addTime(currentTime, talk.duration);
+                    const formattedTalkEndTime = formatTime(talkEndTime);
+
+                    // Render talk
+                    const talkElement = document.createElement('div');
+                    talkElement.classList.add('schedule-item');
+                    talkElement.innerHTML = `
+                        <span class="time">${talkStartTime} - ${formattedTalkEndTime}</span>
+                        <h2>${talk.title}</h2>
+                        <div class="speakers">
+                            ${talk.speakers.map(speaker => `
+                                <strong>${speaker.name}</strong>
+                                <p class="speaker-bio">${speaker.bio}</p>
+                            `).join('')}
+                        </div>
+                        <p class="categories">Categories: ${talk.category.join(', ')}</p>
+                        <p class="description">${talk.description}</p>
+                    `;
+                    scheduleContainer.appendChild(talkElement);
+
+                    currentTime = talkEndTime; // Update current time after talk
+
+                    // Add transition time
+                    if (index < talksToRender.length - 1) {
+                        currentTime = addTime(currentTime, 10); // 10 minutes transition
+                    }
+
+                    // Add lunch break after the 3rd talk
+                    if (index === 2) {
+                        const lunchStartTime = formatTime(currentTime);
+                        const lunchEndTime = formatTime(addTime(currentTime, 60)); // 1 hour lunch
+                        const lunchBreakElement = document.createElement('div');
+                        lunchBreakElement.classList.add('break-item');
+                        lunchBreakElement.innerHTML = `<span class="time">${lunchStartTime} - ${lunchEndTime}</span><p>Lunch Break</p>`;
+                        scheduleContainer.appendChild(lunchBreakElement);
+                        currentTime = addTime(currentTime, 60); // Update current time after lunch
+                        currentTime = addTime(currentTime, 10); // Add transition after lunch
+                    }
+                });
+            };
+
+            // Initialize schedule display
+            renderSchedule(allTalks);
+
+            // Search functionality
+            categorySearchInput.addEventListener('input', (event) => {
+                const searchTerm = event.target.value.toLowerCase();
+                const filteredTalks = allTalks.filter(talk =>
+                    talk.category.some(cat => cat.toLowerCase().includes(searchTerm))
+                );
+                renderSchedule(filteredTalks);
+            });
+        });
+    </script>
+</body>
+</html>
